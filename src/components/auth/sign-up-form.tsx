@@ -1,5 +1,6 @@
 'use client'
 
+import Image from 'next/image'
 import Link from 'next/link'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
@@ -42,12 +43,24 @@ export function SignUpForm() {
   }
 
   return (
-    <Card className="w-full max-w-md">
-      <CardHeader>
-        <CardTitle>Criar cadastro</CardTitle>
-        <CardDescription>Cadastro aberto para este ambiente.</CardDescription>
+    <Card className="w-full max-w-md border-white/15 bg-card/90 shadow-2xl backdrop-blur-sm">
+      <CardHeader className="space-y-4 pb-6 text-center">
+        <div className="mx-auto w-full max-w-[250px]">
+          <Image
+            src="/brand/zerohum-logo.png"
+            alt="Zero Hum Extreme Sports"
+            width={900}
+            height={635}
+            className="h-auto w-full"
+            priority
+          />
+        </div>
+        <div className="space-y-1">
+          <CardTitle className="text-2xl">Criar conta</CardTitle>
+          <CardDescription>Cadastro aberto para este ambiente.</CardDescription>
+        </div>
       </CardHeader>
-      <CardContent>
+      <CardContent className="space-y-5">
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
             <Label htmlFor="name">Nome</Label>
@@ -56,6 +69,7 @@ export function SignUpForm() {
               type="text"
               value={name}
               onChange={(event) => setName(event.target.value)}
+              className="h-11"
               required
             />
           </div>
@@ -66,6 +80,7 @@ export function SignUpForm() {
               type="email"
               value={email}
               onChange={(event) => setEmail(event.target.value)}
+              className="h-11"
               required
             />
           </div>
@@ -77,18 +92,19 @@ export function SignUpForm() {
               minLength={8}
               value={password}
               onChange={(event) => setPassword(event.target.value)}
+              className="h-11"
               required
             />
           </div>
           {error ? (
             <p className="text-sm text-destructive">{error}</p>
           ) : null}
-          <Button type="submit" className="w-full" disabled={loading}>
+          <Button type="submit" className="h-11 w-full font-semibold" disabled={loading}>
             {loading ? <LoaderCircle className="h-4 w-4 animate-spin" /> : null}
             {loading ? 'Criando...' : 'Criar conta'}
           </Button>
         </form>
-        <p className="mt-4 text-sm text-muted-foreground">
+        <p className="text-center text-sm text-muted-foreground">
           Já tem conta?{' '}
           <Link href="/entrar" className="text-primary hover:underline">
             Entrar
@@ -98,4 +114,3 @@ export function SignUpForm() {
     </Card>
   )
 }
-
