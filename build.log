@@ -1,0 +1,41 @@
+
+> app@0.1.0 build A:\projetos-ssd\painho\gestão de gastos
+> next build
+
+▲ Next.js 16.2.0 (Turbopack)
+- Environments: .env
+
+  Creating an optimized production build ...
+Found 1 warning while optimizing generated CSS:
+
+[2m│   background: var(--color-bg);[22m
+[2m│ }[22m
+[2m│[22m @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+[2m┆[22m        [33m[2m^--[22m @import rules must precede all rules aside from @charset and @layer statements[39m
+[2m┆[22m
+[2m│ .app-layout {[22m
+[2m│   display: flex;[22m
+
+✓ Compiled successfully in 2.8s
+  Running TypeScript ...
+  Finished TypeScript in 2.4s ...
+  Collecting page data using 10 workers ...
+Error: Failed to collect configuration for /receitas
+    at ignore-listed frames {
+  [cause]: Error [PrismaClientConstructorValidationError]: Using engine type "client" requires either "adapter" or "accelerateUrl" to be provided to PrismaClient constructor.
+  Read more at https://pris.ly/d/client-constructor
+      at module evaluation (A:\projetos-ssd\painho\gestão de gastos\.next\server\chunks\ssr\[root-of-the-server]__00txwoi._.js:19:371)
+      at instantiateModule (A:\projetos-ssd\painho\gestão de gastos\.next\server\chunks\ssr\[turbopack]_runtime.js:853:9)
+      at getOrInstantiateModuleFromParent (A:\projetos-ssd\painho\gestão de gastos\.next\server\chunks\ssr\[turbopack]_runtime.js:877:12)
+      at Context.esmImport [as i] (A:\projetos-ssd\painho\gestão de gastos\.next\server\chunks\ssr\[turbopack]_runtime.js:281:20)
+      at module evaluation (A:\projetos-ssd\painho\gestão de gastos\.next\server\chunks\ssr\_0h1drfl._.js:1:60)
+      at instantiateModule (A:\projetos-ssd\painho\gestão de gastos\.next\server\chunks\ssr\[turbopack]_runtime.js:853:9)
+      at getOrInstantiateModuleFromParent (A:\projetos-ssd\painho\gestão de gastos\.next\server\chunks\ssr\[turbopack]_runtime.js:877:12)
+}
+
+> Build error occurred
+Error: Failed to collect page data for /receitas
+    at ignore-listed frames {
+  type: 'Error'
+}
+ ELIFECYCLE  Command failed with exit code 1.
