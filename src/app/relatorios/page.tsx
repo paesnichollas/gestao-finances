@@ -93,11 +93,11 @@ export default async function RelatoriosPage({ searchParams }: RelatoriosPagePro
         <CardContent className="grid gap-3 md:grid-cols-4">
           <div className="rounded-md border p-4">
             <p className="text-xs uppercase tracking-wide text-muted-foreground">Receita total</p>
-            <p className="text-lg font-semibold text-emerald-600">{formatBRL(dashboard.totalRevenue)}</p>
+            <p className="text-lg font-semibold text-success">{formatBRL(dashboard.totalRevenue)}</p>
           </div>
           <div className="rounded-md border p-4">
             <p className="text-xs uppercase tracking-wide text-muted-foreground">Despesa total</p>
-            <p className="text-lg font-semibold text-rose-600">{formatBRL(dashboard.totalExpense)}</p>
+            <p className="text-lg font-semibold text-destructive">{formatBRL(dashboard.totalExpense)}</p>
           </div>
           <div className="rounded-md border p-4">
             <p className="text-xs uppercase tracking-wide text-muted-foreground">Lucro líquido</p>
@@ -127,7 +127,7 @@ export default async function RelatoriosPage({ searchParams }: RelatoriosPagePro
                 {Object.entries(dashboard.revenuesByCategory).map(([category, value]) => (
                   <TableRow key={category}>
                     <TableCell>{revenueCategoryLabel(category)}</TableCell>
-                    <TableCell className="text-right font-medium text-emerald-600">
+                    <TableCell className="text-right font-medium text-success">
                       {formatBRL(value)}
                     </TableCell>
                   </TableRow>
@@ -153,7 +153,7 @@ export default async function RelatoriosPage({ searchParams }: RelatoriosPagePro
                 {Object.entries(dashboard.expensesByCategory).map(([category, value]) => (
                   <TableRow key={category}>
                     <TableCell>{expenseCategoryLabel(category)}</TableCell>
-                    <TableCell className="text-right font-medium text-rose-600">
+                    <TableCell className="text-right font-medium text-destructive">
                       {formatBRL(value)}
                     </TableCell>
                   </TableRow>
@@ -182,7 +182,7 @@ export default async function RelatoriosPage({ searchParams }: RelatoriosPagePro
                 .map(([partnerId, partnerData]) => (
                   <TableRow key={partnerId}>
                     <TableCell className="font-medium">{partnerData.partnerName}</TableCell>
-                    <TableCell className="text-right font-medium text-amber-600">
+                    <TableCell className="text-right font-medium text-warning">
                       {formatBRL(partnerData.total)}
                     </TableCell>
                   </TableRow>
@@ -213,8 +213,8 @@ export default async function RelatoriosPage({ searchParams }: RelatoriosPagePro
                   <TableCell className="font-medium">{summary.partnerName}</TableCell>
                   <TableCell>{summary.percentage}%</TableCell>
                   <TableCell>{formatBRL(summary.profitShare)}</TableCell>
-                  <TableCell className="text-amber-600">{formatBRL(summary.reimbursableExpense)}</TableCell>
-                  <TableCell className="text-right font-semibold text-emerald-600">
+                  <TableCell className="text-warning">{formatBRL(summary.reimbursableExpense)}</TableCell>
+                  <TableCell className="text-right font-semibold text-success">
                     {formatBRL(summary.finalAmount)}
                   </TableCell>
                 </TableRow>
@@ -245,7 +245,7 @@ export default async function RelatoriosPage({ searchParams }: RelatoriosPagePro
                     <TableCell>{formatDateBR(revenue.date)}</TableCell>
                     <TableCell>{revenue.description}</TableCell>
                     <TableCell>{revenueCategoryLabel(revenue.category)}</TableCell>
-                    <TableCell className="text-right font-medium text-emerald-600">
+                    <TableCell className="text-right font-medium text-success">
                       {formatBRL(revenue.amount)}
                     </TableCell>
                   </TableRow>
@@ -314,7 +314,7 @@ export default async function RelatoriosPage({ searchParams }: RelatoriosPagePro
                         ))}
                       </div>
                     </TableCell>
-                    <TableCell className="text-right font-medium text-rose-600">
+                    <TableCell className="text-right font-medium text-destructive">
                       {formatBRL(expense.totalAmount)}
                     </TableCell>
                   </TableRow>

@@ -96,3 +96,31 @@ export function multiplyDecimals(a: DecimalValue, b: DecimalValue, scale = 2): s
 export function compareDecimals(a: DecimalValue, b: DecimalValue): number {
   return toDecimal(a).cmp(toDecimal(b))
 }
+
+const BRL_FORMATTER = new Intl.NumberFormat('pt-BR', {
+  style: 'currency',
+  currency: 'BRL',
+  minimumFractionDigits: 2,
+  maximumFractionDigits: 2,
+})
+
+export function decimalStringToCents(value: string | null | undefined): string {
+  if (value === null || value === undefined || value === '') {
+    return '0'
+  }
+  return toDecimal(value).times(100).toDecimalPlaces(0, Decimal.ROUND_HALF_UP).toFixed(0)
+}
+
+export function centsToDecimalString(cents: string | null | undefined): string {
+  const digits = (cents ?? '0').replace(/\D/g, '') || '0'
+  const padded = digits.padStart(3, '0')
+  const intPart = padded.slice(0, -2).replace(/^0+(?=\d)/, '')
+  const decPart = padded.slice(-2)
+  return `${intPart}.${decPart}`
+}
+
+export function formatCentsToBRL(cents: string | null | undefined): string {
+  const digits = (cents ?? '0').replace(/\D/g, '') || '0'
+  const numeric = Number(digits) / 100
+  return BRL_FORMATTER.format(numeric)
+}

@@ -117,7 +117,7 @@ export function DashboardCharts({
           {revenueData.length === 0 ? (
             <p className="pt-10 text-center text-sm text-muted-foreground">Sem dados</p>
           ) : (
-            <ResponsiveContainer width="100%" height="100%">
+            <ResponsiveContainer width="100%" height={300} minWidth={0}>
               <PieChart>
                 <Pie
                   data={revenueData}
@@ -148,7 +148,7 @@ export function DashboardCharts({
           {expenseData.length === 0 ? (
             <p className="pt-10 text-center text-sm text-muted-foreground">Sem dados</p>
           ) : (
-            <ResponsiveContainer width="100%" height="100%">
+            <ResponsiveContainer width="100%" height={300} minWidth={0}>
               <PieChart>
                 <Pie
                   data={expenseData}
@@ -173,13 +173,13 @@ export function DashboardCharts({
 
       <Card className="xl:col-span-2">
         <CardHeader>
-          <CardTitle className="text-base">Distribuicao final por socio</CardTitle>
+          <CardTitle className="text-base">Distribuição final por sócio</CardTitle>
         </CardHeader>
         <CardContent className="h-[320px]">
           {partnerData.length === 0 ? (
             <p className="pt-10 text-center text-sm text-muted-foreground">Sem dados</p>
           ) : (
-            <ResponsiveContainer width="100%" height="100%">
+            <ResponsiveContainer width="100%" height={300} minWidth={0}>
               <BarChart data={partnerData}>
                 <XAxis dataKey="name" tickLine={false} axisLine={false} />
                 <YAxis tickLine={false} axisLine={false} tickFormatter={(value) => `R$ ${value}`} />

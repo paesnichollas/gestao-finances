@@ -13,6 +13,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
+import { CurrencyInput } from '@/components/ui/currency-input'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import {
@@ -238,14 +239,12 @@ export function RevenuesClient({
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="revenue-amount">Valor (R$)</Label>
-                <Input
+                <Label htmlFor="revenue-amount">Valor</Label>
+                <CurrencyInput
                   id="revenue-amount"
-                  type="text"
-                  inputMode="decimal"
-                  placeholder="0,00"
                   value={amount}
-                  onChange={(event) => setAmount(event.target.value)}
+                  onValueChange={setAmount}
+                  allowEmpty
                   required
                 />
               </div>
@@ -340,7 +339,7 @@ export function RevenuesClient({
                   <TableCell className="font-medium">{revenue.description}</TableCell>
                   <TableCell>{categoryLabel(revenue.category)}</TableCell>
                   <TableCell>{formatDateBR(revenue.date)}</TableCell>
-                  <TableCell className="text-right font-medium text-emerald-600">
+                  <TableCell className="text-right font-medium text-success">
                     {formatBRL(revenue.amount)}
                   </TableCell>
                   <TableCell>{revenue.origin || '-'}</TableCell>

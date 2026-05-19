@@ -163,11 +163,11 @@ export function SettlementClient({
           <div className="grid gap-3 md:grid-cols-3">
             <div className="rounded-md border p-4">
               <p className="text-xs uppercase tracking-wide text-muted-foreground">Receita total</p>
-              <p className="text-lg font-semibold text-emerald-600">{formatBRL(currentSummary.totalRevenue)}</p>
+              <p className="text-lg font-semibold text-success">{formatBRL(currentSummary.totalRevenue)}</p>
             </div>
             <div className="rounded-md border p-4">
               <p className="text-xs uppercase tracking-wide text-muted-foreground">Despesa total</p>
-              <p className="text-lg font-semibold text-rose-600">{formatBRL(currentSummary.totalExpense)}</p>
+              <p className="text-lg font-semibold text-destructive">{formatBRL(currentSummary.totalExpense)}</p>
             </div>
             <div className="rounded-md border p-4">
               <p className="text-xs uppercase tracking-wide text-muted-foreground">Lucro líquido</p>
@@ -192,8 +192,8 @@ export function SettlementClient({
                     <TableCell className="font-medium">{summary.partnerName}</TableCell>
                     <TableCell>{summary.percentage}%</TableCell>
                     <TableCell>{formatBRL(summary.profitShare)}</TableCell>
-                    <TableCell className="text-amber-600">{formatBRL(summary.reimbursableExpense)}</TableCell>
-                    <TableCell className="text-right font-semibold text-emerald-600">
+                    <TableCell className="text-warning">{formatBRL(summary.reimbursableExpense)}</TableCell>
+                    <TableCell className="text-right font-semibold text-success">
                       {formatBRL(summary.finalAmount)}
                     </TableCell>
                   </TableRow>
@@ -302,11 +302,11 @@ export function SettlementClient({
                     <div className="grid gap-3 md:grid-cols-3">
                       <div className="rounded-md border p-3">
                         <p className="text-xs uppercase tracking-wide text-muted-foreground">Receita</p>
-                        <p className="font-semibold text-emerald-600">{formatBRL(settlement.totalRevenue)}</p>
+                        <p className="font-semibold text-success">{formatBRL(settlement.totalRevenue)}</p>
                       </div>
                       <div className="rounded-md border p-3">
                         <p className="text-xs uppercase tracking-wide text-muted-foreground">Despesa</p>
-                        <p className="font-semibold text-rose-600">{formatBRL(settlement.totalExpense)}</p>
+                        <p className="font-semibold text-destructive">{formatBRL(settlement.totalExpense)}</p>
                       </div>
                       <div className="rounded-md border p-3">
                         <p className="text-xs uppercase tracking-wide text-muted-foreground">Lucro</p>
@@ -332,17 +332,17 @@ export function SettlementClient({
                               <TableCell className="font-medium">{summary.partnerName}</TableCell>
                               <TableCell>{summary.percentage}%</TableCell>
                               <TableCell>{formatBRL(summary.profitShare)}</TableCell>
-                              <TableCell className="text-amber-600">
+                              <TableCell className="text-warning">
                                 {formatBRL(summary.reimbursableExpense)}
                               </TableCell>
-                              <TableCell className="text-emerald-600">
+                              <TableCell className="text-success">
                                 {formatBRL(summary.finalAmount)}
                               </TableCell>
                               <TableCell
                                 className={`text-right font-medium ${
                                   compareDecimals(summary.pendingAmount, 0) === 1
-                                    ? 'text-amber-600'
-                                    : 'text-emerald-600'
+                                    ? 'text-warning'
+                                    : 'text-success'
                                 }`}
                               >
                                 {formatBRL(summary.pendingAmount)}

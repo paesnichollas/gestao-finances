@@ -14,6 +14,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
+import { CurrencyInput } from '@/components/ui/currency-input'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import {
@@ -193,7 +194,12 @@ export function ExpensesClient({
         return
       }
 
-      const validPayments = payments.filter((payment) => payment.partnerId && payment.amountPaid.trim().length > 0)
+      const validPayments = payments.filter(
+        (payment) =>
+          payment.partnerId &&
+          payment.amountPaid.trim().length > 0 &&
+          compareDecimals(payment.amountPaid, 0) === 1,
+      )
       const payload = {
         description,
         category:
@@ -311,14 +317,12 @@ export function ExpensesClient({
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="expense-total">Valor total (R$)</Label>
-                <Input
+                <Label htmlFor="expense-total">Valor total</Label>
+                <CurrencyInput
                   id="expense-total"
-                  type="text"
-                  inputMode="decimal"
-                  placeholder="0,00"
                   value={totalAmount}
-                  onChange={(event) => setTotalAmount(event.target.value)}
+                  onValueChange={setTotalAmount}
+                  allowEmpty
                   required
                 />
               </div>
@@ -376,12 +380,13 @@ export function ExpensesClient({
                       </SelectContent>
                     </Select>
 
-                    <Input
-                      type="text"
-                      inputMode="decimal"
-                      placeholder="Valor pago"
+                    <CurrencyInput
                       value={payment.amountPaid}
-                      onChange={(event) => updatePayment(index, 'amountPaid', event.target.value)}
+                      onValueChange={(decimalString) =>
+                        updatePayment(index, 'amountPaid', decimalString)
+                      }
+                      allowEmpty
+                      aria-label="Valor pago pelo sócio"
                     />
 
                     <Button
@@ -405,10 +410,10 @@ export function ExpensesClient({
                 <p
                   className={
                     compareDecimals(remaining, 0) === 1
-                      ? 'text-amber-600'
+                      ? 'text-warning'
                       : compareDecimals(remaining, 0) === -1
                         ? 'text-destructive'
-                        : 'text-emerald-600'
+                        : 'text-success'
                   }
                 >
                   {compareDecimals(remaining, 0) === 1
@@ -485,7 +490,7 @@ export function ExpensesClient({
                       ))}
                     </div>
                   </TableCell>
-                  <TableCell className="text-right font-medium text-rose-600">
+                  <TableCell className="text-right font-medium text-destructive">
                     {formatBRL(expense.totalAmount)}
                   </TableCell>
                   <TableCell className="text-right">

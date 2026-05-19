@@ -24,37 +24,42 @@ export default async function DashboardPage() {
         netProfit={data.netProfit}
       />
 
-      <section className="flex items-center justify-between">
+      <section className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-2xl font-semibold tracking-tight">Dashboard</h1>
-          <p className="text-sm text-muted-foreground">Visão geral financeira do projeto</p>
+          <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
+          <p className="text-base text-muted-foreground">Visão geral financeira do projeto</p>
         </div>
-        <Badge variant="secondary">{data.partnersCount} sócios ativos</Badge>
+        <Badge variant="secondary" className="self-start sm:self-auto">
+          {data.partnersCount} sócios ativos
+        </Badge>
       </section>
 
       <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
         {data.partnerSummaries.map((summary) => (
-          <Card key={summary.partnerId}>
+          <Card
+            key={summary.partnerId}
+            className="transition-all hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-md"
+          >
             <CardHeader className="pb-2">
               <CardTitle className="flex items-center justify-between text-base">
                 <span>{summary.partnerName}</span>
-                <Badge variant="outline">{summary.percentage}%</Badge>
+                <Badge variant="outline" className="tabular-nums">{summary.percentage}%</Badge>
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-2 text-sm">
               <div className="flex items-center justify-between">
                 <span className="text-muted-foreground">Lucro proporcional</span>
-                <span className="font-medium">{formatBRL(summary.profitShare)}</span>
+                <span className="font-medium tabular-nums">{formatBRL(summary.profitShare)}</span>
               </div>
               <div className="flex items-center justify-between">
                 <span className="text-muted-foreground">Despesas antecipadas</span>
-                <span className="font-medium text-amber-600">
+                <span className="font-medium tabular-nums text-warning">
                   {formatBRL(summary.reimbursableExpense)}
                 </span>
               </div>
               <div className="flex items-center justify-between border-t pt-2">
                 <span className="text-muted-foreground">Valor final</span>
-                <span className="font-semibold text-emerald-600">{formatBRL(summary.finalAmount)}</span>
+                <span className="font-semibold tabular-nums text-success">{formatBRL(summary.finalAmount)}</span>
               </div>
             </CardContent>
           </Card>
@@ -91,7 +96,7 @@ export default async function DashboardPage() {
                   data.recentRevenues.map((revenue) => (
                     <TableRow key={revenue.id}>
                       <TableCell>{revenue.description}</TableCell>
-                      <TableCell className="text-right font-medium text-emerald-600">
+                      <TableCell className="text-right font-medium text-success">
                         {formatBRL(revenue.amount)}
                       </TableCell>
                     </TableRow>
@@ -125,7 +130,7 @@ export default async function DashboardPage() {
                   data.recentExpenses.map((expense) => (
                     <TableRow key={expense.id}>
                       <TableCell>{expense.description}</TableCell>
-                      <TableCell className="text-right font-medium text-rose-600">
+                      <TableCell className="text-right font-medium text-destructive">
                         {formatBRL(expense.totalAmount)}
                       </TableCell>
                     </TableRow>

@@ -1,6 +1,7 @@
 'use client'
 
 import { usePathname } from 'next/navigation'
+import { AppHeader } from '@/components/layout/app-header'
 import { Sidebar } from '@/components/layout/sidebar'
 
 const PUBLIC_ROUTES = ['/entrar', '/cadastro']
@@ -20,6 +21,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   return (
     <div className="min-h-screen bg-muted/30">
       <Sidebar />
+      <AppHeader />
       <main className="mx-auto max-w-7xl px-4 py-6 md:pl-[17rem] md:pr-6">
         {children}
       </main>
