@@ -1,3 +1,4 @@
+import path from "path";
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
@@ -19,6 +20,9 @@ const nextConfig: NextConfig = {
   },
   reactCompiler: true,
   serverExternalPackages: ['@prisma/client', 'prisma'],
+  turbopack: {
+    root: path.join(__dirname),
+  },
 };
 
 export default nextConfig;

@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { Download } from 'lucide-react'
 import { getDashboardData } from '@/actions/dashboard'
 import { getExpenses, getExpensesByPartner } from '@/actions/expenses'
 import { getRevenues } from '@/actions/revenues'
@@ -81,9 +82,17 @@ export default async function RelatoriosPage({ searchParams }: RelatoriosPagePro
         netProfit={dashboard.netProfit}
       />
 
-      <section>
-        <h1 className="text-2xl font-semibold tracking-tight">Relatórios</h1>
-        <p className="text-sm text-muted-foreground">Consolidado financeiro do projeto</p>
+      <section className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <h1 className="text-2xl font-semibold tracking-tight">Relatórios</h1>
+          <p className="text-sm text-muted-foreground">Consolidado financeiro do projeto</p>
+        </div>
+        <Button asChild>
+          <a href="/api/relatorios/exportar-pdf">
+            <Download className="h-4 w-4" aria-hidden="true" />
+            Exportar PDF
+          </a>
+        </Button>
       </section>
 
       <Card>

@@ -67,7 +67,7 @@ export async function getDashboardData() {
 export async function generateSettlement(referenceLabel: string) {
   await requireSession()
 
-  const [revenueSum, expenseSum, partners, paymentsByPartner] = await prisma.$transaction([
+  const [revenueSum, expenseSum, partners, paymentsByPartner] = await Promise.all([
     prisma.revenue.aggregate({
       _sum: { amount: true },
     }),

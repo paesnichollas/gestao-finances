@@ -4,6 +4,7 @@ import { FINANCE_CACHE_TAGS } from '@/lib/cache-tags'
 import { addDecimals, decimalToString, type DecimalValue } from '@/lib/decimal'
 import { normalizePagination, toPaginatedResult, type PaginationInput } from '@/lib/pagination'
 import { prisma } from '@/lib/prisma'
+import { buildFinancialReportSnapshot } from '@/lib/report-export'
 
 function serializePayment<T extends { amountPaid: DecimalValue }>(payment: T) {
   return {
@@ -87,7 +88,7 @@ export async function getDashboardReadModel() {
     advancedByPartnerRows,
     recentRevenues,
     recentExpenses,
-  ] = await prisma.$transaction([
+  ] = await Promise.all([
     prisma.revenue.aggregate({
       _sum: { amount: true },
     }),
@@ -194,7 +195,7 @@ export async function getRevenuesPage(input: PaginationInput = {}) {
 
   const { page, pageSize, skip, take } = normalizePagination(input)
 
-  const [total, items] = await prisma.$transaction([
+  const [total, items] = await Promise.all([
     prisma.revenue.count(),
     prisma.revenue.findMany({
       orderBy: { date: 'desc' },
@@ -222,7 +223,7 @@ export async function getExpensesPage(input: PaginationInput = {}) {
 
   const { page, pageSize, skip, take } = normalizePagination(input)
 
-  const [total, items] = await prisma.$transaction([
+  const [total, items] = await Promise.all([
     prisma.expense.count(),
     prisma.expense.findMany({
       orderBy: { date: 'desc' },
@@ -262,55 +263,47 @@ export async function getPartnersPage(input: PaginationInput = {}) {
 
   const { page, pageSize, skip, take } = normalizePagination(input)
 
-  const result = await prisma.$transaction(async (tx) => {
-    const [total, items] = await Promise.all([
-      tx.partner.count(),
-      tx.partner.findMany({
-        orderBy: { name: 'asc' },
-        skip,
-        take,
-        select: {
-          id: true,
-          name: true,
-          percentage: true,
-          isActive: true,
-          notes: true,
-        },
-      }),
-    ])
+  const [total, partnerRows] = await Promise.all([
+    prisma.partner.count(),
+    prisma.partner.findMany({
+      orderBy: { name: 'asc' },
+      skip,
+      take,
+      select: {
+        id: true,
+        name: true,
+        percentage: true,
+        isActive: true,
+        notes: true,
+      },
+    }),
+  ])
 
-    const partnerIds = items.map((partner) => partner.id)
-    const advancedByPartner = partnerIds.length > 0
-      ? await tx.expensePayment.groupBy({
-        by: ['partnerId'],
-        orderBy: { partnerId: 'asc' },
-        where: {
-          partnerId: { in: partnerIds },
-        },
-        _sum: {
-          amountPaid: true,
-        },
-      })
-      : []
-
-    return {
-      total,
-      items,
-      advancedByPartner,
-    }
-  })
+  const partnerIds = partnerRows.map((partner) => partner.id)
+  const advancedByPartner = partnerIds.length > 0
+    ? await prisma.expensePayment.groupBy({
+      by: ['partnerId'],
+      orderBy: { partnerId: 'asc' },
+      where: {
+        partnerId: { in: partnerIds },
+      },
+      _sum: {
+        amountPaid: true,
+      },
+    })
+    : []
 
   const advancedMap = new Map(
-    result.advancedByPartner.map((row) => [row.partnerId, decimalToString(row._sum?.amountPaid ?? '0', 2)]),
+    advancedByPartner.map((row) => [row.partnerId, decimalToString(row._sum?.amountPaid ?? '0', 2)]),
   )
 
-  const items = result.items.map((partner) => ({
+  const items = partnerRows.map((partner) => ({
     ...partner,
     percentage: decimalToString(partner.percentage, 2),
     totalAdvanced: advancedMap.get(partner.id) ?? '0.00',
   }))
 
-  return toPaginatedResult(items, result.total, page, pageSize)
+  return toPaginatedResult(items, total, page, pageSize)
 }
 
 export async function getActivePartnersReadModel() {
@@ -343,7 +336,7 @@ export async function getSettlementsPage(input: PaginationInput = {}) {
 
   const { page, pageSize, skip, take } = normalizePagination(input)
 
-  const [total, items] = await prisma.$transaction([
+  const [total, items] = await Promise.all([
     prisma.settlement.count(),
     prisma.settlement.findMany({
       orderBy: { createdAt: 'desc' },
@@ -421,4 +414,69 @@ export async function getExpensesByPartnerReadModel() {
   }
 
   return byPartner
+}
+
+export async function getFinancialReportExportReadModel() {
+  const [partners, revenues, expenses] = await Promise.all([
+    prisma.partner.findMany({
+      orderBy: { name: 'asc' },
+      select: {
+        id: true,
+        name: true,
+        percentage: true,
+        isActive: true,
+      },
+    }),
+    prisma.revenue.findMany({
+      orderBy: { date: 'desc' },
+      select: {
+        id: true,
+        description: true,
+        category: true,
+        amount: true,
+        date: true,
+      },
+    }),
+    prisma.expense.findMany({
+      orderBy: { date: 'desc' },
+      select: {
+        id: true,
+        description: true,
+        category: true,
+        totalAmount: true,
+        date: true,
+        payments: {
+          select: {
+            id: true,
+            partnerId: true,
+            amountPaid: true,
+            partner: {
+              select: {
+                name: true,
+              },
+            },
+          },
+        },
+      },
+    }),
+  ])
+
+  return buildFinancialReportSnapshot({
+    partners: partners.map((partner) => ({
+      ...partner,
+      percentage: decimalToString(partner.percentage, 2),
+    })),
+    revenues: revenues.map((revenue) => ({
+      ...revenue,
+      amount: decimalToString(revenue.amount, 2),
+    })),
+    expenses: expenses.map((expense) => ({
+      ...expense,
+      totalAmount: decimalToString(expense.totalAmount, 2),
+      payments: expense.payments.map((payment) => ({
+        ...payment,
+        amountPaid: decimalToString(payment.amountPaid, 2),
+      })),
+    })),
+  })
 }

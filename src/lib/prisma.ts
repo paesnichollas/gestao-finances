@@ -15,11 +15,20 @@ const globalForPrisma = globalThis as unknown as {
 const createPrismaClient = () => {
   const adapter = new PrismaPg({
     connectionString: postgresUrlForNodePg(databaseUrl),
+    // Neon / serverless: pool pequeno + timeouts explícitos (Prisma 7 + adapter-pg)
+    max: 5,
+    connectionTimeoutMillis: 10_000,
+    idleTimeoutMillis: 30_000,
+    allowExitOnIdle: true,
   })
 
   return new PrismaClient({
     adapter,
     log: ['warn', 'error'],
+    transactionOptions: {
+      maxWait: 10_000,
+      timeout: 30_000,
+    },
   })
 }
 
